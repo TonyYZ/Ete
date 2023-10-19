@@ -19,8 +19,14 @@ txt = '''
 Ưrah rơm, izucun. Ucunizaṡ, ĩhemõṡũl. Itaé gớt, izupun. Upunizág, ĩhemõṡũl. Ưtar ịtát, íábipaé ghom. Ĩrágót, itatư bah ésehomoż. Ưbẽhonós. Ưżuṡazailian. Uṡaz: Upun atư bah, édhom éctaupuzużuċul. Éṡb ẻtớtaulupużuzuluċul, atifẽ hơm ịfusus. Ipáde żơt, rarmoż, mơt mơc ịfẽ hơm. Ágizud, ĩmabon? Ibe mfiáhailiág? Ibzaé gơc ịpr. Hơm ịzásiláṡ, izátilaé dơṡ. Bớs échom óv, izaribád, ré cớs ịzaé sơċ, ifẽ hmód ịbẽ ṡớd. Évhom ịzásiláṡ, izátilẻ bơṡ. Izulupużuzuluċul ifaé vehomód, itrfaé vhom. Ágé gud ịlár, itrẽ ruput bah. Brũt ịbư żágót ưzab ịbaz: Ĩram żớt, tde rớtũy ịbẽ rớtũf. Ĩbz olatditaé dơh óciṡ, ĩmz õtulupużuzuluċul itatư bah? Te gơh ịzư faṡot ogitac, mizaripaṡ. Tucututulu izabitẽ rơṡ ịrtuh. Tucużupuċulu izapṡirtufus. Ĩrulõr ĩmz õrz! Rraz ĩlgõ ṡraz, ritig lgõ ṡitig. Ĩmz õrzir? Ẽraremoṡũżuż ịlarzuṡibuh, ẽbrũhug ịlarzudibus, ĩrtigõr. Ưżah ịzubizé gnũmul, użuzutugizud, użuzutugizus; ĩcr ohgzẽ ṡerótũż, ucużupuċuċugizud, ucużupuċuċugizus. Ibrư puzal otrifẽ ṡitig, idabe mơṡ, ĩml ũfu!
 	'''
 # txt = "e'ezubo'uatíd ẽca'efuro'íg"
-# txt = "e'e'e'e'e'e'e'e'e'e'etto'to'to'to'to'to'to'to'to'to't e'e'e'e'e'e'e'e'e'e'etto'to'to'to'to'to'to'to'to'to't e'e'e'e'e'e'e'e'e'e'etto'to'to'to'to'to'to'to'to'to't e'e'e'e'e'e'e'e'e'e'etto'to'to'to'to'to'to'to'to'to't".replace('t', 'c')
-txt = "mil oċ"
+txt = "e'e'e'e'e'e'e'e'e'e'etto'to'to'to'to'to'to'to'to'to't e'e'e'e'e'e'e'e'e'e'etto'to'to'to'to'to'to'to'to'to't e'e'e'e'e'e'e'e'e'e'etto'to'to'to'to'to'to'to'to'to't e'e'e'e'e'e'e'e'e'e'etto'to'to'to'to'to'to'to'to'to't".replace('t', 'c')
+# txt = "mil"
+guideTree = ['parallel', ['series', ['h', 1, 0]], ['series', ['c', 1, 0], ['parallel', ['series', ['h', 0, 0]], ['series', ['c', 0, 0], ['parallel', ['series', ['c', 1, 0]], ['series', ['t', 0, 0]], ['series', ['ṡ', 0, 0]], ['series', ['ṡ', 1, 0]]],
+                ['parallel', ['series', ['t', 1, 0]], ['series', ['t', 0, 0]]], ['t', 0, 0]]],
+                ['parallel', ['series', ['h', 0, 0]], ['series', ['c', 0, 0],
+                  ['parallel', ['series', ['c', 1, 0]], ['series', ['c', 0, 0]]],
+                  ['parallel', ['series', ['t', 1, 0]], ['series', ['c', 0, 0]]], ['t', 0, 0]]], ['t', 1, 0]
+                                                 ]]
 quadIndex = pyqtree.Index(bbox=[-WIDTH / 2, -HEIGHT / 2, WIDTH / 2, HEIGHT / 2])
 screen = Screen()
 width, height = screen.screensize()
@@ -63,6 +69,8 @@ boxLst = []
 history = []
 undoStepAcc = 0
 nextPeriod = False
+innerWidthCode = 0
+innerLengthCode = 0
 global firstEndXor
 global firstEndYor
 global firstEndDir
@@ -612,14 +620,14 @@ def drawFuseau(comp, lengths, widths, tmpDir, tmpDivDir, inner=False, depth=0, s
     tmpBoxLst = []
     boxNum = 0
 
-    for j in range(len(comp)):
+    for j in range(len([branch for branch in comp if not isPair(branch)])):
         lastIsInnerFuseau = False
         innerFirstEndDir = -1
         alter = 1
         print("drawing: vote Lengths", voteLengths)
         chosenLength = max(voteLengths)
         chosenIndex = voteLengths.index(chosenLength)
-        print("drawing: chosen index", chosenIndex, comp[chosenIndex], "comp", comp, "j", j, 'alter', alter)
+        print("drawing: chosen index", chosenIndex, comp[chosenIndex], "comp", comp, "j", j, 'alter', alter, 'widths', widths)
         if j != 0:  # not the first branch
             lastStep = sum([widths[i] for i in range(j % 2, j + 1, 2)])
             firstElem = comp[chosenIndex][0]
@@ -632,6 +640,8 @@ def drawFuseau(comp, lengths, widths, tmpDir, tmpDivDir, inner=False, depth=0, s
             angle += 90 * side
             hasSame = False
             for elem in comp[chosenIndex]:
+                if isPair(elem):
+                    continue
                 if not isFuseau(elem) and (exDir(elem[0]) == tmpDir or exDir(elem[0]) == 2):
                     hasSame = True
             if hasSame:
@@ -642,8 +652,8 @@ def drawFuseau(comp, lengths, widths, tmpDir, tmpDivDir, inner=False, depth=0, s
                 t.forward(maxLength / 2)
             if isFuseau(firstElem):
                 if hasSame:
-                    add = sum([innerWidths[(depth, chosenIndex, 0)][i] for i in
-                               range(1, len(innerWidths[(depth, chosenIndex, 0)]), 2)])
+                    add = sum([innerWidths[firstElem[-1][1]][i] for i in
+                               range(1, len(innerWidths[firstElem[-1][1]]), 2)])
                     t.forward(add)
                     # adjust the starting point
                     print("added", add)
@@ -654,8 +664,8 @@ def drawFuseau(comp, lengths, widths, tmpDir, tmpDivDir, inner=False, depth=0, s
                     print("adjusted the chosen component")
             maxFirst = comp[maxIndex][0]  # the stem component's first element
             if isFuseau(maxFirst):
-                t.forward(-sum([innerWidths[(depth, maxIndex, 0)][i] for i in
-                                range(1, len(innerWidths[(depth, maxIndex, 0)]), 2)]))
+                t.forward(-sum([innerWidths[maxFirst[-1][1]][i] for i in
+                                range(1, len(innerWidths[maxFirst[-1][1]]), 2)]))
                 # adjust the starting point
                 print("aligned to the stem component")
             elif exDir(maxFirst[0]) != tmpDir and exDir(maxFirst[0]) != 2:
@@ -666,6 +676,8 @@ def drawFuseau(comp, lengths, widths, tmpDir, tmpDivDir, inner=False, depth=0, s
             t.pendown()
 
         for k, elem in enumerate(comp[chosenIndex]):
+            if isPair(elem):
+                continue
             print("now vote", voteLengths, k, elem)
             if isFuseau(elem):
                 tmpAngle = angle
@@ -684,7 +696,7 @@ def drawFuseau(comp, lengths, widths, tmpDir, tmpDivDir, inner=False, depth=0, s
                     normalDir = 1  # mirror (i.e. 1) * mirror2
                 else:
                     normalDir = 0
-                result = drawFuseau(elem, innerLengths[(depth, chosenIndex, k)], innerWidths[(depth, chosenIndex, k)],
+                result = drawFuseau(elem, innerLengths[elem[-1][0]], innerWidths[elem[-1][1]],
                            1 - tmpDir, normalDir, inner=True, depth=depth + 1, side=side)
                 if result == -1:
                     return -1
@@ -890,7 +902,7 @@ def allocWidth(comp, tmpDir, lengths, depth=0):
     widths = [0]
     side = 1
 
-    for j in range(len(comp)):
+    for j in range(len([branch for branch in comp if not isPair(branch)])):
         alter = 1
         print("vote Lengths", voteLengths)
         chosenLength = max(voteLengths)
@@ -915,6 +927,8 @@ def allocWidth(comp, tmpDir, lengths, depth=0):
         hasDif = False
 
         for k, elem in enumerate(comp[chosenIndex]):
+            if isPair(elem):
+                continue
             if not hasDif and (isFuseau(elem) or exDir(elem[0]) != tmpDir and exDir(elem[0]) != 2):
                 firstDif = k
                 hasDif = True
@@ -929,6 +943,8 @@ def allocWidth(comp, tmpDir, lengths, depth=0):
             "lastSame: " + str(lastSame) + " sameCombo: " + str(sameCombo) + " firstDif: " + str(firstDif))
 
         for k, elem in enumerate(comp[chosenIndex]):
+            if isPair(elem):
+                continue
             # notice that we replace j with chosenIndex, mapping widths (not innerWidths) directly to the order of votes
             if not isFuseau(elem) and (exDir(elem[0]) == tmpDir or exDir(elem[0]) == 2):
                 newOffMax = measure(elem, 1 - tmpDir) \
@@ -951,8 +967,8 @@ def allocWidth(comp, tmpDir, lengths, depth=0):
                 offMax = 0
 
                 if isFuseau(elem):
-                    curWidth += max(innerLengths[(depth, chosenIndex, k)])
-                    print("added fuseau", max(innerLengths[(depth, chosenIndex, k)]))
+                    curWidth += max(innerLengths[elem[-1][0]])
+                    print("added fuseau", max(innerLengths[elem[-1][0]]))
                 else:
                     curWidth += measure(elem, 1 - tmpDir)
                     print("added " + elem[0] + " " + str(measure(elem, 1 - tmpDir)))
@@ -971,7 +987,10 @@ def allocWidth(comp, tmpDir, lengths, depth=0):
         voteLengths[chosenIndex] = 0
         side *= -1
         print("widths", widths)
-    return widths[:len(comp)]
+    return widths[:len([branch for branch in comp if not isPair(branch)])]
+
+def isPair(lst):
+    return isinstance(lst, list) and len(lst) == 2 and isinstance(lst[0], int) and isinstance(lst[1], int)
 
 
 def allocLength(comp, tmpDir, depth=0):
@@ -994,8 +1013,10 @@ def allocLength(comp, tmpDir, depth=0):
     global nextPeriod
     global innerLengths
     global innerWidths
+    global innerWidthCode
+    global innerLengthCode
 
-    lengths = [0] * len(comp)  # the space that would be occupied by each branch (its length)
+    lengths = [0] * len([branch for branch in comp if not isPair(branch)])  # the space that would be occupied by each branch (its length)
     hasFuseauBranches = []
     for j, branch in enumerate(comp):
         offMax = 0  # the widest offset until we meet an element with the correct direction
@@ -1007,9 +1028,12 @@ def allocLength(comp, tmpDir, depth=0):
         hasSame = False
 
         for k, elem in enumerate(branch):
+            if isPair(elem):
+                continue
+
             if isFuseau(elem):
                 hasFuseauBranches.append(j)
-                inLength = allocLength(elem, 1 - tmpDir, depth + 1)
+                inLength, comp[j][k] = allocLength(elem, 1 - tmpDir, depth + 1)
                 maxLength = max(inLength)
                 dominateGoal = int(maxLength // UNIT + 1)
                 print("max length", maxLength, "dominate goal", dominateGoal)
@@ -1025,7 +1049,11 @@ def allocLength(comp, tmpDir, depth=0):
                         elem.append([['-', 0, 0]] * dominateGoal)
                     print("after ext", elem, depth, j, k, inLength)
                     inLength.append(dominateGoal * UNIT)
-                innerLengths[(depth, j, k)] = inLength
+                innerLengthCode += 1
+                if not isPair(elem[-1]):
+                    comp[j][k].append([0, 0])
+                comp[j][k][-1][0] = innerLengthCode
+                innerLengths[innerLengthCode] = inLength
             elif not hasSame and (exDir(elem[0]) == tmpDir or exDir(elem[0]) == 2):
                 firstSame = k
                 hasSame = True
@@ -1041,17 +1069,23 @@ def allocLength(comp, tmpDir, depth=0):
             firstSame))
 
         for k, elem in enumerate(branch):
+            if isPair(elem):
+                continue
             print("cur elem", elem)
             if isFuseau(elem):
-                innerWidths[(depth, j, k)] = allocWidth(elem, 1 - tmpDir, innerLengths[(depth, j, k)], depth + 1)
-                print("new inner width", (depth, j, k), innerWidths[(depth, j, k)], 1 - tmpDir)
+                innerWidthCode += 1
+                if not isPair(elem[-1]):
+                    comp[j][k].append([0, 0])
+                comp[j][k][-1][1] = innerWidthCode
+                innerWidths[innerWidthCode] = allocWidth(elem, 1 - tmpDir, innerLengths[elem[-1][0]], depth + 1)
+                print("new inner width", innerWidthCode, innerWidths[innerWidthCode], 1 - tmpDir, elem)
                 newOffMax = 0
                 if alter != 1 or k < firstSame or firstSame == -1:
                     newOffMax += sum(
-                        [innerWidths[(depth, j, k)][i] for i in range(1, len(innerWidths[(depth, j, k)]), 2)])
+                        [innerWidths[elem[-1][1]][i] for i in range(1, len(innerWidths[elem[-1][1]]), 2)])
                 if alter != -1 or difCombo and k >= lastDif:
                     newOffMax += sum(
-                        [innerWidths[(depth, j, k)][i] for i in range(0, len(innerWidths[(depth, j, k)]), 2)])
+                        [innerWidths[elem[-1][1]][i] for i in range(0, len(innerWidths[elem[-1][1]]), 2)])
 
                 if newOffMax > offMax:
                     print("new off Max", newOffMax, "old off max", offMax)
@@ -1110,7 +1144,7 @@ def allocLength(comp, tmpDir, depth=0):
     print('lengths', lengths, 'comp', comp)
     print("tmpDir: " + str(tmpDir))
     print("len: " + str(len(comp)))
-    return lengths
+    return lengths, comp
 
 
 def draw(lst):
@@ -1196,7 +1230,8 @@ def draw(lst):
                     dir = 1 - dir  # swap back
                 innerLengths = {}
                 innerWidths = {}
-                lengths = allocLength(comp, dir, depth=0)
+                lengths, comp = allocLength(comp, dir, depth=0)
+                print("updated comp", comp)
                 widths = allocWidth(comp, dir, lengths, depth=0)
                 print("outer dicts", lengths, widths)
                 print("inner dicts", innerLengths, innerWidths)
@@ -1500,9 +1535,11 @@ def draw(lst):
 def main():
     readResult = ItiParser.read(txt)
     passageLst = readResult[0]
-    compNum = readResult[1]
-    print(passageLst)
-    print(compNum)
+    #compNum = readResult[1]
+    # passageLst = [[ItiParser.convert2Tree(guideTree)]]
+
+    print('Passage List:', passageLst)
+    #print('Component Number:', compNum)
     # t.screensize(WIDTH, HEIGHT)
     t.speed(0)
     screen.delay(0)

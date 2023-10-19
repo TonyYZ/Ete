@@ -555,6 +555,15 @@ def parse(guideMode=False):
     return compNum
 
 
+def convert2Tree(guideTree):  # convert guide trees into drawable trees
+    if guideTree[0] in ['parallel', 'series']:
+        newTree = []
+        for comp in guideTree[1:]:
+            newTree.append(convert2Tree(comp))
+    else:
+        newTree = guideTree
+    return newTree
+
 def read(txt, guideMode=False):
     global prev
     global layer
