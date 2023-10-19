@@ -80,7 +80,7 @@ global curAlter
 global lastIsFuseau
 global compInd
 global daughter
-global innerLengths  # lengths of the inner fuseaux. To locate, use (depth, j, k)
+global innerLengths  # lengths of the inner fuseaux. To locate, use code
 global innerWidths  # widths of the inner fuseaux.
 
 
