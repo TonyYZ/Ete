@@ -6,7 +6,9 @@
 
 ## Motivation
 
-Ítí explores whether a writing system can encode phonological and morphological structure spatially — making the hierarchical organisation of a word visible in the geometry of its rendered form — while remaining legible as a continuous path rather than a sequence of disconnected symbols. The project also functions as a learnability experiment: can learners acquire an unfamiliar but structurally motivated writing system more readily than an arbitrary one?
+Ítí is an attempt to create a conlang that is elegant, expressive, and intuitive.
+*Elegant & Expressive:* While the simplicity of its character set resonates with other conlangs like Toki Pona, it pursues a flowing script built out of the discrete symbols. In a way, it is in the same spirit with the transformation from the mechanical assembly of radicals to the poetic expressiveness of cursive script in Chinese characters. 
+*Intuitive:* The fundamental phonology-semantics correspondences were derived from my synaesthesia of sounds in languages across the world. On the other hand, symbols are combined in series or parallel, depending on if the concepts are spatially contiguous or sharing the same space. The phonology and the syntax are both iconic.
 
 ---
 
