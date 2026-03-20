@@ -61,8 +61,8 @@ The text in `ItiDrawer.py` is a prose passage in Ítí demonstrating all major g
 | `ItiParser.py` | Parses Ítí text into structured branch trees consumed by the renderer |
 | `ItiDrawer.py` | Renders parsed trees as a continuous visual path using Python turtle graphics |
 | `Iti2IPA.py` | Normalises Ítí orthography before parsing: lowercases text (handling Ítí-specific uppercase characters), strips punctuation, and maps accented vowels to their base forms and diacritics to IPA symbols (`ṡ→ʃ`, `ż→ʧ`, `c→k`, `ċ→x`, `r→ɾ`, etc.) |
-| `Nuaiti.ttf` | Custom font for rendering Ítí text in its native script |
-| `Uriti.ttf` | Alternative custom font for Ítí text |
+| `Nuaiti.otf` | Custom font for rendering Ítí text in its native script |
+| `Uriti.otf` | Alternative custom font for Ítí text |
 
 ---
 
@@ -74,7 +74,7 @@ The text in `ItiDrawer.py` is a prose passage in Ítí demonstrating all major g
 
 **Iti2IPA** is called first by the parser. It performs two operations:
 
-1. **Lowercase** — Ítí uses several vowel characters that combine diacritics not found in standard Unicode: for example, *E with dot below and tilde above*, *I with dot below and acute*, *E with dot below and acute*, and *E with hook above and dot below*. Because no standard Unicode code points encode these exact combinations, they are represented using available code points (Ƞ, Ȍ, Ț, Ȟ for uppercase; ȡ, ȍ, ț, ȟ for lowercase) and rendered correctly only with the custom fonts `Nuaiti.ttf` and `Uriti.ttf`. The `lower()` function maps the uppercase forms to their lowercase counterparts before calling Python's `.lower()`, which handles the remaining standard characters.
+1. **Lowercase** — Ítí uses several vowel characters that combine diacritics not found in standard Unicode: for example, *E with dot below and tilde above*, *I with dot below and acute*, *E with dot below and acute*, and *E with hook above and dot below*. Because no standard Unicode code points encode these exact combinations, they are represented using available code points (Ƞ, Ȍ, Ț, Ȟ for uppercase; ȡ, ȍ, ț, ȟ for lowercase) and rendered correctly only with the custom fonts `Nuaiti.otf` and `Uriti.otf`. The `lower()` function maps the uppercase forms to their lowercase counterparts before calling Python's `.lower()`, which handles the remaining standard characters.
 2. **Normalise** — accented vowels are stripped of their accent marks and diacritics are converted to their IPA equivalents (e.g. `ṡ→ʃ`, `ż→ʧ`, `z→ʦ`, `c→k`, `ċ→x`, `r→ɾ`, `ơ→ə`, `ư→ɯ`). This produces a simplified phonemic form that the regex patterns in `ItiParser` can match unambiguously.
 
 **ItiParser** then proceeds in two stages:
@@ -145,7 +145,7 @@ Set `exportMode = True` in `ItiDrawer.py`. The renderer uses `svg_turtle` in pla
 - [`pyqtree`](https://github.com/karimbahgat/Pyqtree) — spatial quad-tree index for collision detection in maze mode
 - [`svg_turtle`](https://github.com/donkirkby/svg-turtle) — SVG export backend for turtle graphics
 - Python standard library: `turtle`, `math`, `random`, `re`
-- **Custom fonts** — `Nuaiti.ttf` and `Uriti.ttf` are required to correctly display Ítí text in any application (text editors, browsers, documentation) since several vowel characters use Unicode code points repurposed for diacritic combinations not otherwise encodable in standard Unicode
+- **Custom fonts** — `Nuaiti.otf` and `Uriti.otf` are required to correctly display Ítí text in any application (text editors, browsers, documentation) since several vowel characters use Unicode code points repurposed for diacritic combinations not otherwise encodable in standard Unicode
 
 ---
 
