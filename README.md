@@ -22,8 +22,8 @@ Consonants are the primary carriers of meaning. Each consonant maps to a specifi
 
 | Class | Consonants | Visual behaviour |
 |-------|-----------|-----------------|
-| **Passive** (horizontal strokes) | ṡ s b d n v r g h `-` | drawn perpendicular to the current direction of travel |
-| **Active** (vertical strokes) | ż z p t m f l c ċ `\|` | drawn along the current direction of travel |
+| **Passive** (horizontal strokes) | ṡ s b d n v r g h `-` | drawn horizontally |
+| **Active** (vertical strokes) | ż z p t m f l c ċ `\|` | drawn vertically |
 | **Neutral** | y w | adapt to the current direction |
 
 The distinction between passive and active consonants governs how the drawing direction alternates as text is rendered, creating the characteristic serpentine path of the script.
